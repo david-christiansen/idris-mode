@@ -259,6 +259,9 @@ Invokes `idris-prover-script-mode-hook'."
     ((:write-goal goal target)
      (idris-prover-write-goals goal)
      t)
+    ((:abandon-proof x target)
+     (kill-buffer (idris-prover-obligations-buffer))
+     (kill-buffer (idris-prover-script-buffer)))
     (t nil)))
 
 
