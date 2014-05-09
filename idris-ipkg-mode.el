@@ -204,7 +204,7 @@ Invokes `idris-ipkg-build-mode-hook'.")
         (setq ipkg-file (car found))
         ;; Now ipkg-file contains the path to the package
         (with-temp-buffer
-          (insert-file ipkg-file)
+          (insert-file-contents ipkg-file)
           (goto-char (point-min))
           (let ((found
                  (re-search-forward "^\\s-*sourcedir\\s-*=\\s-*\\(\\sw+\\)"
