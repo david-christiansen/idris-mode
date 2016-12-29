@@ -163,7 +163,7 @@
 
 (defun idris-filename-to-load ()
   "Compute the working directory and filename to load in Idris, returning these as a cons."
-  (let* ((fn (buffer-file-name))
+  (let* ((fn (idris-buffer-file-name))
          (ipkg-srcdir (idris-ipkg-find-src-dir))
          (srcdir (if ipkg-srcdir
                      ipkg-srcdir
@@ -222,7 +222,7 @@ line."
                           (:end ,end-line ,end-col))
                          ,props)
                        (when (string= (file-name-nondirectory fn)
-                                      (file-name-nondirectory (buffer-file-name)))
+                                      (file-name-nondirectory (idris-buffer-file-name)))
                          (idris-highlight-input-region (current-buffer)
                                                        start-line start-col
                                                        end-line end-col
@@ -272,7 +272,7 @@ line."
 Idris process. This sets the load position to point, if there is one."
   (save-buffer)
   (idris-ensure-process-and-repl-buffer)
-  (if (buffer-file-name)
+  (if (idris-buffer-file-name)
       (unless (idris-position-loaded-p (point))
         (idris-warning-reset-all)
         (when (and idris-load-to-here
@@ -849,7 +849,7 @@ type-correct, so loading will fail."
   "Delete the IBC file for the current buffer. A prefix argument
 means to not ask for confirmation."
   (interactive "P")
-  (let* ((fname (buffer-file-name))
+  (let* ((fname (idris-buffer-file-name))
          (ibc (concat (file-name-sans-extension fname) ".ibc")))
     (if (not (or (string= (file-name-extension fname) "idr")
                  (string= (file-name-extension fname) "lidr")))

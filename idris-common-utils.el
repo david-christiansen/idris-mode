@@ -357,10 +357,18 @@ corresponding values in the CDR of VALUE."
 	       '()
 	     `((t (error "ELISP destructure-case failed: %S" ,tmp))))))))
 
+(defun idris-buffer-file-name (&optional buffer)
+  "Return name of file BUFFER is visiting, or throw an error if none.
+No argument or nil as argument means use the current buffer."
+  (let ((fn (buffer-file-name buffer)))
+    (if fn
+        fn
+      (error "Buffer is not visiting a file"))))
+
 (defun idris-lidr-p (&optional buffer)
   "Return t if BUFFER is a literate Idris file, or nil otherwise. Use the current buffer if
 BUFFER is not supplied or is nil."
-  (let ((file-name (buffer-file-name buffer)))
+  (let ((file-name (idris-buffer-file-name buffer)))
     ;; We check for nil here because idris-lidr-p might be called on
     ;; buffers that don't have associated files, such as the REPL
     ;; buffer or an info buffer

@@ -108,7 +108,7 @@
   "Make all modules with existing files clickable, where clicking opens them"
   (interactive)
   (idris-clear-file-link-overlays 'idris-ipkg-mode)
-  (let ((src-dir (idris-ipkg-buffer-src-dir (file-name-directory (buffer-file-name)))))
+  (let ((src-dir (idris-ipkg-buffer-src-dir (file-name-directory (idris-buffer-file-name)))))
     ;; Make the sourcedir clickable
     (save-excursion
       (goto-char (point-min))
@@ -127,10 +127,10 @@
     (save-excursion
       (goto-char (point-min))
       (cl-flet ((mod-link ()
-                  (re-search-forward "[a-zA-Z0-9\\.]+" nil t)
-                  (let ((beg (match-beginning 0))
-                        (end (match-end 0)))
-                    (idris-make-module-link beg end src-dir))))
+                          (re-search-forward "[a-zA-Z0-9\\.]+" nil t)
+                          (let ((beg (match-beginning 0))
+                                (end (match-end 0)))
+                            (idris-make-module-link beg end src-dir))))
         (when (re-search-forward "^modules\\s-*=\\s-*" nil t)
           (cl-loop initially (mod-link)
                    while (looking-at-p "\\s-*,\\s-*")
@@ -143,12 +143,12 @@
         (let ((start (match-beginning 1))
               (end (match-end 1))
               (makefile (concat (file-name-as-directory src-dir) (match-string 1))))
-        (when (file-exists-p makefile)
-          (let ((map (make-sparse-keymap)))
-            (define-key map [mouse-2] #'(lambda ()
-                                          (interactive)
-                                          (find-file makefile)))
-            (idris-make-file-link-overlay start end map  "mouse-2: edit makefile"))))))))
+          (when (file-exists-p makefile)
+            (let ((map (make-sparse-keymap)))
+              (define-key map [mouse-2] #'(lambda ()
+                                            (interactive)
+                                            (find-file makefile)))
+              (idris-make-file-link-overlay start end map  "mouse-2: edit makefile"))))))))
 
 
 (defun idris-ipkg-enable-clickable-files ()
@@ -180,7 +180,7 @@ or nil if not found."
                        ;; accounts for both.
                        ((or (null parent) (equal parent (directory-file-name parent))) nil) ; Not found
                        (t (find-file-r (directory-file-name parent))))))) ; Continue
-    (let* ((file (buffer-file-name (current-buffer)))
+    (let* ((file (idris-buffer-file-name))
            (dir (if file (file-name-directory file) default-directory)))
       (when dir
         (cl-remove-if #'(lambda (f)
